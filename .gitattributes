@@ -1,0 +1,2 @@
+# test fixtures compared byte for byte: no CRLF on Windows checkouts
+lua/test/scripts/* -text

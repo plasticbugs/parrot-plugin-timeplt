@@ -1,0 +1,20 @@
+build/
+build-*/
+.DS_Store
+__pycache__/
+.claude/settings.local.json
+CLAUDE.local.md
+# never in the repo: the game's files and anything made from them
+*.zip
+*.wav
+*.dump
+*.pix
+*.tr
+*.str
+tm[1-7]
+timeplt.b[45]
+timeplt.e9
+timeplt.e12
+*.CVP
+# MAME snapshots, should one land here
+snap/

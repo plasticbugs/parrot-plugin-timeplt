@@ -1,0 +1,21 @@
+commit 4070e7f2320edb5cbb7f6beb69817972331e0001
+date   2026-11-21T20:07:03-08:00
+about  Text Editor 0.1.2, Vectrex 0.1.6: USES standalone (they start with no file)
+copied 2026-11-22T04:24:44Z by tools/update-sdk.sh
+
+4070e7f is the cart's main (a179a17) with the USB hub fix (4e89896,
+def9782) and the standalone flag (cd457d0). Main has the two-sample bus
+loop (cvfserve.S, cvframes_serve2: 6fd58e0, from esbglitch 537952a).
+
+also, from elsewhere:
+  firmware/revc/sdk/cvscale.c, cvscale.h, test/cvscale_test.c
+      the 3/4 scaler, from the Pac-Man branch at 88872e0 (4a17e6e and
+      88872e0; Donkey Kong d180697 has the same files), not yet on main
+  firmware/revc/sdk/README.md
+      4070e7f's, with the cvscale.c/.h row added
+  firmware/revc/sdk/cvedit.c
+      the kit's own: 4070e7f's with GCC's Linux truncation warnings fixed
+      (kit commits 43d0bf4, 1d38641)
+  firmware/revc/sdk/cvlaunch.h
+      CVL_BACK_GROUP, from the cart's menu-groups branch (f8f9f27), not yet
+      on main (kit commit e2b692e)

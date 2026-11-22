@@ -1,0 +1,1 @@
+0:computer=0 500:joy=up+fire 600:key=5 1600:keydown=E1 1620:keydown=04 1640:keyup=04 1660:keyup=E1 1700:keydown=28 1720:keyup=28 1800:mouse=40,20,1,1 1850:mouse=-300,5,0,-2 2000:pad=south+l 2050:lstick=1500,-900 2100:pad2=east 2100:pad2kind=hid 2150:rstick2=-2048,2047 2300:pad2=off 2500:midiin=90,3C,64 2600:midiin=F8

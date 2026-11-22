@@ -1,0 +1,2 @@
+# cmd.exe wants a batch file's lines to end in CR LF
+run.bat text eol=crlf

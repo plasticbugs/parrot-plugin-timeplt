@@ -1,0 +1,88 @@
+# Every push and pull request: the plugin and the examples must build, and
+# the checks that need no Mac and no MAME must pass (docs/testing.md).
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Tools (Arm GCC 9.2.1, pico-sdk 2.1.1, picotool, sjasmplus)
+        run: tools/ci/setup.sh
+
+      - name: Build the plugin
+        run: |
+          cmake -B build -G Ninja -DPICO_SDK_PATH="$HOME/pico-sdk"
+          ninja -C build
+          python3 tools/ci/cvpinfo.py build/*.CVP
+
+      - name: Build the examples
+        run: |
+          if [ -f examples/CMakeLists.txt ]; then
+            cmake -S examples -B build-examples -G Ninja -DPICO_SDK_PATH="$HOME/pico-sdk"
+            ninja -C build-examples
+          fi
+
+      - name: Run them on the console's model
+        run: |
+          # (the card examples need macOS's hdiutil, and MAME a BIOS: not here)
+          NO_MAME=1 test/run.sh time-pilot time-pilot-usb
+
+      - name: The Lua plugin, and scripts on the console's model
+        run: |
+          cmake -S lua -B build-lua -G Ninja -DPICO_SDK_PATH="$HOME/pico-sdk"
+          ninja -C build-lua
+          python3 tools/ci/cvpinfo.py build-lua/LUA.CVP
+          # (the card tests need macOS's hdiutil: the simulator job runs them from a folder)
+          NO_MAME=1 lua/test/run.sh
+
+      - name: Screenshots
+        run: |
+          set -- screenshots/screenshot-*.png
+          if [ -f "$1" ]; then python3 tools/png256.py check "$@"; fi
+
+  simulator:
+    # the plugin simulator (sim/, docs/simulator.md), on each system: built
+    # for every example, then each run headless (no window, no sound) and
+    # checked by sim/test.sh against the models' own run
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: SDL3
+        run: |
+          case "$RUNNER_OS" in
+            macOS) brew install sdl3 ninja ;;
+            Linux) sudo apt-get update -q && sudo apt-get install -y -q ninja-build zlib1g-dev libasound2-dev && sim/get-sdl.sh ;;
+            Windows) sim/get-sdl.sh ;;
+          esac
+
+      - name: The models alone, for the simulator's pictures to match
+        if: runner.os != 'Windows'
+        run: NO_MAME=1 test/run.sh time-pilot time-pilot-usb
+
+      - name: The simulator, headless
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then export CMAKE_GENERATOR="Visual Studio 17 2022"; fi
+          sim/test.sh
