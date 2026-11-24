@@ -63,6 +63,11 @@ void cvpad_drop(void);
 // state yet: a Switch pad takes a moment to start)
 bool cvpad_get(int n, gamepad_t *p);
 
+// some pad holds all of these buttons (GP_*) now. Unlike cvpad_get() it
+// leaves the presses it latches alone: cvk_task() and cvf_task() look with
+// it for Select and Start (cvhome.h)
+bool cvpad_held(uint32_t buttons);
+
 // pads plugged in now (started or not)
 int cvpad_count(void);
 

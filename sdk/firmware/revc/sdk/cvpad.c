@@ -262,6 +262,19 @@ bool cvpad_get(int n, gamepad_t *p) {
     return ok;
 }
 
+bool cvpad_held(uint32_t buttons) {
+    bool held = false;
+    const uint32_t irq = save_and_disable_interrupts();
+    for (int n = 0; n < CVPAD_MAX && !held; n++) {
+        const slot_t *s = &pads[n];
+        if (s->driver == CVPAD_NONE || !s->live) continue;
+        const uint32_t b = s->driver == CVPAD_SWITCH ? s->sw.pad.buttons : s->hp.pad.buttons;
+        held = (b & buttons) == buttons;
+    }
+    restore_interrupts(irq);
+    return held;
+}
+
 bool cvpad_info(int n, cvpad_info_t *out) {
     if (n < 0 || n >= CVPAD_MAX) return false;
     slot_t *s = &pads[n];

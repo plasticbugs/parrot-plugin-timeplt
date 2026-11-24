@@ -50,6 +50,6 @@ cvcart_features(timeplt PADS CARD)
 
 # The plugin (docs/plugin-rules.md): the ID is yours for good; the version
 # is the release's tag without its v.
-cvcart_plugin(timeplt ID parrotcart.timeplt NAME "Time Pilot" VERSION 0.1.1 BY "Parrot Cart"
+cvcart_plugin(timeplt ID parrotcart.timeplt NAME "Time Pilot" VERSION 0.1.2 BY "Parrot Cart"
               ICON src/icon.txt README CART-README.md FILE TIMEPLT.CVP
               HOME /TIMEPLT USES usb-host)

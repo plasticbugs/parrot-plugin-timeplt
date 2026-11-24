@@ -18,7 +18,7 @@ On the ColecoVision controller:
 - Either fire button fires.
 - Keypad * or # adds a coin.
 - Keypad 1 starts a one-player game, and keypad 2 a two-player game.
-- RESET on the console goes back to the menu.
+- RESET on the console goes back to the menu, and so does holding both fire buttons and \* for 2 seconds (Select and Start on a USB pad).
 
 On a USB pad, through a powered hub:
 
